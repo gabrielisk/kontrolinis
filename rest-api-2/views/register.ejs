@@ -1,0 +1,48 @@
+<%- include('partials/header'); -%>
+
+<h2>Registracija</h2>
+<form id="registerForm">
+  <label>Email:</label>
+  <input id="email" type="text" placeholder="email" required />
+
+  <label>Slaptažodis:</label>
+  <input id="password" type="password" placeholder="slaptažodis" required />
+
+  <input type="submit" value="Registruotis" />
+</form>
+<p id="message"></p>
+
+<script>
+  document.getElementById("registerForm").onsubmit = function (event) {
+    event.preventDefault();
+    const messageElement = document.getElementById("message");
+    const body = { email: email.value, password: password.value };
+    messageElement.textContent = "...";
+
+    fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        if (data && data.error) {
+          messageElement.textContent = data.error;
+          return;
+        }
+        messageElement.textContent = "Sukurta — dabar prisijunkite";
+        setTimeout(function () {
+          location.href = "/login";
+        }, 600);
+      })
+      .catch(function (error) {
+        messageElement.textContent = String(
+          error && error.message ? error.message : error
+        );
+      });
+  };
+</script>
+
+<%- include('partials/footer'); -%>

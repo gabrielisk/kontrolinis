@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="lt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Programuotojai</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-bar">
+        <nav class="main-nav">
+          <a
+            href="/"
+            class="nav-link <%= (typeof path!=='undefined' && path==='/') ? 'active' : '' %>"
+            >Pagrindinis</a
+          >
+          <a
+            href="/create"
+            class="nav-link <%= (typeof path!=='undefined' && path==='/create') ? 'active' : '' %>"
+            >Pridėti</a
+          >
+          <a
+            href="/update"
+            class="nav-link <%= (typeof path!=='undefined' && path==='/update') ? 'active' : '' %>"
+            >Atnaujinti</a
+          >
+          <a
+            href="/delete"
+            class="nav-link <%= (typeof path!=='undefined' && path==='/delete') ? 'active' : '' %>"
+            >Ištrinti</a
+          >
+        </nav>
+      </div>
+    </header>
+  </body>
+</html>

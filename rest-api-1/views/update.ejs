@@ -1,0 +1,73 @@
+<%- include('partials/header'); -%>
+
+<h1 class="title">Atnaujinti programuotoją</h1>
+<div id="homepage">
+  <form id="updateForm">
+    <p>
+      <label>ID: <br /><input type="text" id="id" required /></label>
+    </p>
+    <p>
+      <label>Vardas: <br /><input type="text" id="vardas" /></label>
+    </p>
+    <p>
+      <label>Technologijos: <br /><input type="text" id="tech" /></label>
+    </p>
+    <p>
+      <label>Ilguma: <br /><input type="number" step="any" id="lng" /></label>
+      <label>Platuma: <br /><input type="number" step="any" id="lat" /></label>
+    </p>
+    <p>
+      <label><input type="checkbox" id="laisvas" /> Laisvas</label>
+    </p>
+    <p><button type="submit">Atnaujinti</button></p>
+    <p id="msg"></p>
+  </form>
+</div>
+
+<script>
+  document.getElementById("updateForm").onsubmit = function (e) {
+    e.preventDefault();
+    let id = document.getElementById("id").value;
+    let body = {};
+
+    if (document.getElementById("vardas").value)
+      body.vardas = document.getElementById("vardas").value;
+    if (document.getElementById("tech").value)
+      body.tech = document
+        .getElementById("tech")
+        .value.split(",")
+        .map((s) => s.trim());
+
+    if (
+      document.getElementById("lng").value ||
+      document.getElementById("lat").value
+    ) {
+      body.location = {
+        type: "Point",
+        coordinates: [
+          parseFloat(document.getElementById("lng").value),
+          parseFloat(document.getElementById("lat").value),
+        ],
+      };
+    }
+
+    body.laisvas = document.getElementById("laisvas").checked;
+
+    document.getElementById("msg").innerText = "Atnaujinama...";
+
+    fetch("/api/programuotojai/" + id, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+      .then((r) => r.json())
+      .then((d) => {
+        document.getElementById("msg").innerText = "Atnaujinta ✓";
+      })
+      .catch((err) => {
+        document.getElementById("msg").innerText = "Klaida: " + err;
+      });
+  };
+</script>
+
+<%- include('partials/footer'); -%>

@@ -1,0 +1,46 @@
+<%- include('partials/header'); -%>
+
+<h1 class="title">Ištrinti programuotoją</h1>
+<div id="homepage">
+  <form id="remove">
+    <label>ID:</label>
+    <input type="text" id="d_id" placeholder="Įveskite id" required />
+    <button type="submit" class="danger" style="margin-left: 8px">
+      Ištrinti
+    </button>
+    <p id="d_msg"></p>
+  </form>
+</div>
+
+<script>
+  (function () {
+    var form = document.getElementById("remove");
+    var msg = document.getElementById("d_msg");
+
+    form.onsubmit = function (e) {
+      e.preventDefault();
+
+      var id = document.getElementById("d_id").value.trim();
+      if (!id) {
+        msg.textContent = "Įvesk ID.";
+        return;
+      }
+
+      msg.textContent = "Trinama...";
+
+      fetch("/api/programuotojai/" + encodeURIComponent(id), {
+        method: "DELETE",
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          msg.textContent = "Ištrinta ";
+          form.reset();
+        })
+        .catch(function (err) {
+          msg.textContent = "Klaida: " + err.message;
+        });
+    };
+  })();
+</script>
+
+<%- include('partials/footer'); -%>

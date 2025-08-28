@@ -1,0 +1,144 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap");
+
+body {
+  font-family: Raleway;
+  color: #555;
+  background: #ff5252;
+  margin: 10px 30px;
+}
+#homepage {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 10px 20px;
+  background: #fdfdfd;
+  border-radius: 4px;
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.2);
+}
+input[type="number"] {
+  display: block;
+  width: 300px;
+  margin: 20px 0;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+label {
+  font-weight: bold;
+}
+.title {
+  color: #fff;
+  text-align: center;
+  font-size: 48px;
+}
+#homepage h2 {
+  text-align: center;
+}
+form {
+  max-width: 350px;
+  margin: 30px auto;
+}
+input[type="submit"] {
+  background: #555;
+  color: #fff;
+  border: 0;
+  padding: 10px;
+  font-size: 18px;
+  width: 200px;
+  margin: 0 auto;
+  display: block;
+  cursor: pointer;
+  border-radius: 4px;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+li {
+  padding: 15px 0;
+  background: #eee;
+  list-style-type: none;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+span {
+  display: inline-block;
+  margin: 0 20px;
+}
+span.dist {
+  color: green;
+  float: right;
+}
+span.true {
+  border-radius: 10px;
+  width: 10px;
+  height: 10px;
+  background: green;
+}
+span.false {
+  border-radius: 10px;
+  width: 10px;
+  height: 10px;
+  background: #ff5252;
+}
+button {
+  background: green;
+  border: 0;
+  padding: 5px 10px;
+  color: #fff;
+  display: inline-block;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button.false {
+  display: none;
+}
+
+/* Header / navbar */
+
+.site-bar {
+  margin: 0 auto;
+  width: 100%;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.brand-link {
+  font-weight: 700;
+  text-decoration: none;
+  color: #333;
+}
+.main-nav {
+  display: flex;
+  gap: 8px;
+}
+.main-nav .nav-link {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: #fff;
+  border: 1px solid #eee;
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+}
+.main-nav .nav-link:hover {
+  filter: brightness(1.05);
+}
+.main-nav .nav-link.active {
+  background: #ff5252;
+  border-color: #ff5252;
+  color: #fff;
+}
+.site-footer {
+  max-width: 1100px;
+  margin: 40px auto 10px;
+  padding: 16px 20px;
+  text-align: center;
+  color: #777;
+}
+.small {
+  font-size: 12px;
+}

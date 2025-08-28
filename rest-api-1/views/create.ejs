@@ -1,0 +1,98 @@
+<%- include('partials/header'); -%>
+
+<h1 class="title">Pridėti programuotoją</h1>
+<div id="homepage">
+  <form id="createForm">
+    <p>
+      <label>Vardas:<br /><input type="text" id="vardas" required /></label>
+    </p>
+    <p>
+      <label
+        >Technologijos <br /><input type="text" id="tech" required
+      /></label>
+    </p>
+    <p>
+      <label
+        >Ilguma (lng):<br />
+        <input type="number" step="any" id="lng" required
+      /></label>
+      <label
+        >Platuma (lat):<br />
+        <input type="number" step="any" id="lat" required
+      /></label>
+    </p>
+    <p>
+      <label><input type="checkbox" id="laisvas" /> Laisvas</label>
+    </p>
+    <p><button type="submit">Pridėti</button></p>
+    <p id="msg"></p>
+  </form>
+</div>
+
+<script>
+  (function () {
+    let form = document.getElementById("createForm");
+    let msg = document.getElementById("msg");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      let vardas = document.getElementById("vardas").value.trim();
+      let techStr = document.getElementById("tech").value;
+      let lng = parseFloat(document.getElementById("lng").value);
+      let lat = parseFloat(document.getElementById("lat").value);
+      let laisvas = document.getElementById("laisvas").checked;
+
+      if (!vardas || !techStr || isNaN(lng) || isNaN(lat)) {
+        msg.textContent = "Užpildyk visus laukus teisingai.";
+        return;
+      }
+
+      let body = {
+        vardas: vardas,
+        tech: techStr
+          .split(",")
+          .map(function (s) {
+            return s.trim();
+          })
+          .filter(Boolean),
+        laisvas: laisvas,
+        location: { type: "Point", coordinates: [lng, lat] },
+      };
+
+      msg.textContent = "Kuriama...";
+
+      fetch("/api/programuotojai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+        .then(function (res) {
+          return res.text().then(function (text) {
+            var json = null;
+            try {
+              json = JSON.parse(text);
+            } catch (_) {}
+            return { ok: res.ok, status: res.status, json: json, text: text };
+          });
+        })
+        .then(function (out) {
+          if (!out.ok) {
+            var errorMsg =
+              out.json && out.json.error
+                ? out.json.error
+                : "HTTP " + out.status + " " + out.text;
+            msg.textContent = "Klaida: " + errorMsg;
+            return;
+          }
+          msg.textContent = "Sukurta";
+          form.reset();
+        })
+        .catch(function (err) {
+          msg.textContent = "Klaida (tinklas): " + err;
+        });
+    });
+  })();
+</script>
+
+<%- include('partials/footer'); -%>

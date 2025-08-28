@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="lt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mano užduotys</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <h1 class="title">Todo</h1>
+
+    <div id="homepage">
+      <button id="logoutBtn">Atsijungti</button>
+
+      <h2>Mano užduotys</h2>
+
+      <form id="addForm">
+        <label>Nauja užduotis:</label>
+        <input id="text" type="text" placeholder="nauja užduotis" required />
+        <input type="submit" value="Pridėti" />
+      </form>
+
+      <p id="message"></p>
+      <ul id="list"></ul>
+    </div>
+
+    <script>
+      function getToken() {
+        return localStorage.getItem("token");
+      }
+
+      function authHeaders(json) {
+        const headers = { Authorization: "Bearer " + getToken() };
+        if (json) headers["Content-Type"] = "application/json";
+        return headers;
+      }
+
+      function ensureAuth() {
+        if (!getToken()) {
+          location.href = "/login";
+          return false;
+        }
+        return true;
+      }
+
+      function loadTodos() {
+        if (!ensureAuth()) return;
+        const msg = document.getElementById("message");
+        const list = document.getElementById("list");
+
+        fetch("/api/todos", { headers: authHeaders() })
+          .then((r) => r.json())
+          .then((todos) => {
+            list.innerHTML = "";
+
+            if (!Array.isArray(todos)) {
+              msg.textContent = "Klaida";
+              return;
+            }
+
+            if (!todos.length) {
+              msg.textContent = "Sąrašas tuščias";
+              return;
+            }
+
+            msg.textContent = "";
+
+            todos.forEach((todo) => {
+              const li = document.createElement("li");
+
+              const toggle = document.createElement("span");
+              toggle.textContent = todo.done ? "✅ Atlikta" : "⬜";
+              toggle.style.cursor = "pointer";
+              toggle.onclick = () => {
+                fetch("/api/todos/" + todo._id, {
+                  method: "PUT",
+                  headers: authHeaders(true),
+                  body: JSON.stringify({ done: !todo.done }),
+                }).then(loadTodos);
+              };
+
+              const text = document.createElement("span");
+              text.textContent = todo.text;
+
+              const del = document.createElement("button");
+              del.textContent = "Trinti";
+              del.onclick = () => {
+                fetch("/api/todos/" + todo._id, {
+                  method: "DELETE",
+                  headers: authHeaders(),
+                }).then(loadTodos);
+              };
+
+              li.appendChild(toggle);
+              li.appendChild(text);
+              li.appendChild(del);
+              list.appendChild(li);
+            });
+          });
+      }
+
+      document.getElementById("addForm").onsubmit = (e) => {
+        e.preventDefault();
+        if (!ensureAuth()) return;
+        const text = document.getElementById("text").value;
+
+        fetch("/api/todos", {
+          method: "POST",
+          headers: authHeaders(true),
+          body: JSON.stringify({ text }),
+        }).then(() => {
+          document.getElementById("text").value = "";
+          loadTodos();
+        });
+      };
+
+      document.getElementById("logoutBtn").onclick = () => {
+        localStorage.removeItem("token");
+        location.href = "/login";
+      };
+
+      loadTodos();
+    </script>
+  </body>
+</html>
